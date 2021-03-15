@@ -1,0 +1,17 @@
+services:
+  minecraft:
+    image: lastsandwich/minecraft-vellum-linux
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "29132:19132/udp"
+      - "29132:19132/tcp"
+    #restart: always
+    # allow attaching to container
+    tty: true
+    stdin_open: true
+    volumes:
+      - C:\Minecraft\Vellum-Docker\config:/bedrock-server/config
+      - C:\Minecraft\Vellum-Docker\worlds:/bedrock-server/worlds
+      - C:\Minecraft\Vellum-Docker\backup:/bedrock-server/backup

@@ -1,0 +1,39 @@
+{
+  "BdsBinPath": "./bedrock_server",
+  "Backups": {
+    "EnableBackups": true,
+    "EnableSchedule": false,
+    "Schedule": [
+      "00:00",
+      "06:00",
+      "12:00",
+      "18:00"
+    ],
+    "BackupInterval": 30,
+    "ArchivePath": "/bedrock-server/backup/",
+    "BackupsToKeep": 10,
+    "OnActivityOnly": false,
+    "StopBeforeBackup": false,
+    "NotifyBeforeStop": 60,
+    "PreExec": "",
+    "PostExec": ""
+  },
+  "Renders": {
+    "EnableRenders": false,
+    "PapyrusBinPath": "/bedrock-server/papyrus/PapyrusCs",
+    "PapyrusOutputPath": "/bedrock-server/papyruscs/",
+    "RenderInterval": 2.0,
+    "PapyrusGlobalArgs": "-w $WORLD_PATH -o $OUTPUT_PATH --htmlfile index.html -f png -q 100 --deleteexistingupdatefolder",
+    "PapyrusTasks": [
+      "--dim 0"
+    ],
+    "LowPriority": false
+  },
+  "QuietMode": false,
+  "HideStdout": false,
+  "BusyCommands": true,
+  "CheckForUpdates": false,
+  "StopBdsOnException": true,
+  "BdsWatchdog": true,
+  "Plugins": {}
+}
