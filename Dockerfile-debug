@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
 ARG bedrockVersion=1.20.31.01
-ARG vellumVersion=v0.1.6
+ARG vellumVersion=v0.1.5
 
 ENV version=$bedrockVersion
 ENV vellumVersion=${vellumVersion}
@@ -9,7 +9,12 @@ ENV vellumVersion=${vellumVersion}
 RUN apt-get update && \
     apt-get install -y unzip curl libgdiplus libc6-dev
 
-RUN mkdir bedrock-server
+RUN mkdir bedrock-server && \
+    mkdir /bds && \
+    mkdir /bds/config && \
+    mkdir /bds/backup && \
+    mkdir /bds/temp && \
+    mkdir /bds/tools
 
 RUN if [ "$version" = "latest" ] ; then \
         LATEST_VERSION=$( \
@@ -24,13 +29,10 @@ RUN if [ "$version" = "latest" ] ; then \
     unzip bedrock-server.zip -d bedrock-server && \
     rm bedrock-server.zip && \
     curl -L --fail https://github.com/LastSandwich/vellum/releases/download/${vellumVersion}/vellum_linux-x64_${vellumVersion}.zip --output vellum.zip && \
-    unzip vellum.zip -d bedrock-server && \
+    unzip vellum.zip -d /bds/tools && \
     rm vellum.zip
 
-RUN mkdir /bds && \
-    mkdir /bds/config && \
-    mkdir /bds/backup && \
-    mv /bedrock-server/server.properties /bds/config && \
+RUN mv /bedrock-server/server.properties /bds/config && \
     mv /bedrock-server/permissions.json /bds/config && \
     mv /bedrock-server/allowlist.json /bds/config && \
     ln -s /bds/config/server.properties /bedrock-server/server.properties && \
@@ -39,11 +41,16 @@ RUN mkdir /bds && \
     ln -s /bds/config/configuration.json /bedrock-server/configuration.json && \
     ln -s /bds/worlds /bedrock-server/worlds && \
     ln -s /bds/backup /bedrock-server/backup && \
-    ln -s /bds/backup /bedrock-server/backup
+    ln -s /bds/backup /bedrock-server/backup && \
+    ln -s /bds/temp /bedrock-server/temp && \
+    ln -s /bds/tools/vellum /bedrock-server/vellum && \
+    ln -s /bds/tools/vellum.pdb /bedrock-server/vellum.pdb
 
 RUN chmod 755 /bedrock-server/backup
+RUN chmod 755 /bedrock-server/temp
 
 EXPOSE 19132
+
 WORKDIR /bedrock-server
 
 RUN chmod +x ./bedrock_server
