@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
-ARG bedrockVersion=1.20.31.01
+ARG bedrockVersion=1.21.62.01
 ARG vellumVersion=v0.1.6
 
 ENV version=$bedrockVersion
@@ -13,14 +13,14 @@ RUN mkdir bedrock-server
 
 RUN if [ "$version" = "latest" ] ; then \
         LATEST_VERSION=$( \
-            curl -v --silent https://mc-bds-helper.vercel.app/api/latest 2>&1 | \
-            grep -o 'https://minecraft.azureedge.net/bin-linux/[^"]*' | \
-            sed 's#.*/bedrock-server-##; s/.zip//') && \
+            curl -sSL https://mc-bds-helper.vercel.app/api/latest | \
+            grep -o 'https://www.minecraft.net/bedrockdedicatedserver/bin-linux/bedrock-server-[^"]*.zip' | \
+            sed 's#.*/bedrock-server-##; s/.zip$//') && \
         export version=$LATEST_VERSION && \
         echo "Setting VERSION to $LATEST_VERSION" ; \
     else echo "Using VERSION of $bedrockVersion"; \
     fi && \
-    curl https://minecraft.azureedge.net/bin-linux/bedrock-server-${version}.zip --output bedrock-server.zip && \
+    curl https://www.minecraft.net/bedrockdedicatedserver/bin-linux/bedrock-server-${version}.zip -A "lastsandwich/minecraft-bedrock-server" --output bedrock-server.zip && \
     unzip bedrock-server.zip -d bedrock-server && \
     rm bedrock-server.zip && \
     curl -L --fail https://github.com/LastSandwich/vellum/releases/download/${vellumVersion}/vellum_linux-x64_${vellumVersion}.zip --output vellum.zip && \
